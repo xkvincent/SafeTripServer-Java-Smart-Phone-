@@ -82,7 +82,7 @@ public class DefaultSocketServer extends Thread
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				//break;
+				break;
 			}else if( command.equals("Administrate User")){
 				
 				ArrayList<User> userList = User.getUser();	
@@ -93,7 +93,7 @@ public class DefaultSocketServer extends Thread
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				//break;
+				break;
 			}else{
 				System.out.println("No Request Received");
 			}
