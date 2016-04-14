@@ -7,10 +7,11 @@ import java.sql.SQLException;
 public class DBconnection {
 	private static final boolean DEBUG = true;
 
-    //private static final String DRIVER = "com.mysql.jdbc.Driver";
+    private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static String URL= "jdbc:mysql://127.0.0.1:3306/";
+	//private static String URL = "jdbc:mysql://localhost/";//Modify
     private static String USERNAME = "root";
-    private static String PASSWORD= "";
+    private static String PASSWORD= "root";//Modify
     private static Connection connection;
 
     public static Connection getConnection() {
@@ -20,13 +21,17 @@ public class DBconnection {
     //connection to mySQL
     public static boolean openConnection() {
         try {
-            //Class.forName(DRIVER);
+            Class.forName(DRIVER);
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             System.out.println("Connecting to Database.");
         } catch (SQLException e) {
-            if (DEBUG) System.out.println ("SQL Exception.");
+            if (DEBUG) System.out.println ("Cannot connect to this database.");
             return false;
-        }
+        } catch (ClassNotFoundException e) {
+        	System.err.println(e);
+        	if (DEBUG) System.out.println ("ClassNotFoundException");
+            return false;
+		}
         return true;
     }
 

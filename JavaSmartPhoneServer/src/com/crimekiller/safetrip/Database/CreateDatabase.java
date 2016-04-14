@@ -10,8 +10,8 @@ public class CreateDatabase {
 	        if(DBconnection.openConnection()){
 	            try {
 	                statement = (Statement) DBconnection.getConnection().createStatement();
-	                statement.executeUpdate("DROP DATABASE " + databaseName);
-	                statement.executeUpdate("CREATE DATABASE " + databaseName);
+	                //statement.executeUpdate("DROP DATABASE " + databaseName);
+	                statement.executeUpdate("CREATE DATABASE IF NOT EXISTS " + databaseName);
 	                System.out.println("Database is successfully created!");
 	                statement.close();
 	            } catch (SQLException e){

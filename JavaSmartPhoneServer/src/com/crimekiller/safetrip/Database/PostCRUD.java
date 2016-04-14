@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.crimekiller.safetrip.Model.Post;
+import com.crimekiller.safetrip.model.Post;
 
 public class PostCRUD {
 	private String db;

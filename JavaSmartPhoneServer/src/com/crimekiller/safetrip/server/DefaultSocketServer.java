@@ -3,21 +3,18 @@
  */
 package com.crimekiller.safetrip.server;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
 
-import com.crimekiller.safetrip.Model.User;
+import com.crimekiller.safetrip.Database.UserCRUD;
+import com.crimekiller.safetrip.model.User;
 
 /**
  * @author  Wenlu Zhang 
@@ -33,6 +30,7 @@ public class DefaultSocketServer extends Thread
 	private Socket socket;
 	private ObjectInputStream objInputStream = null;
 	private ObjectOutputStream objOutputStream = null;
+	private static String dataBaseName = "SafeTrip";
 	
 	public DefaultSocketServer( Socket socket ){
 		this.socket = socket;
@@ -72,9 +70,10 @@ public class DefaultSocketServer extends Thread
 				e.printStackTrace();
 			}
 			
-			if( command.equals("Manage Friend")){
-			
-				ArrayList<User> userList = User.getFriends();	
+			if( command.equals("Manage Friend")){		
+				
+				UserCRUD userCrud = new UserCRUD(dataBaseName);
+				ArrayList<User> userList = userCrud.getAllUser();
 				try {
 						objOutputStream.writeObject( userList );
 						objOutputStream.flush();

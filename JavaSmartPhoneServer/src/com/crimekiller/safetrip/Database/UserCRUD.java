@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.crimekiller.safetrip.Model.User;
+import com.crimekiller.safetrip.model.User;
 
 public class UserCRUD {
 	private String db;

@@ -7,18 +7,18 @@ public class CreateTable {
 	private Statement statement;
     private String database;
 
-    String PostTable = "CREATE TABLE Post" + "(postID INT NOT NULL AUTO_INCREMENT," +
+    String PostTable = "CREATE TABLE IF NOT EXISTS Post" + "(postID INT NOT NULL AUTO_INCREMENT," +
             "date varchar(255) NOT NULL,"+
             "licenseplate varchar(255) NOT NULL,"+
             "destination varchar(355) NOT NULL,"+
             "model varchar(255),"+"color varchar(255),"+ "owner varchar(255) NOT NULL,"+
             "departure varchar(355), PRIMARY KEY (postID));";
 
-    String UserTable = "CREATE TABLE User" + "(userID INT NOT NULL AUTO_INCREMENT," +
+    String UserTable = "CREATE TABLE IF NOT EXISTS User" + "(userID INT NOT NULL AUTO_INCREMENT," +
             "username varchar(255) NOT NULL,"+  "email varchar(255) NOT NULL,"+
             "password varchar(355) NOT NULL, PRIMARY KEY (userID)); ";  //add email
     
-    String RelationshipTable = "CREATE TABLE Relationship" +"(user_one_ID INT, user_two_ID INT," +
+    String RelationshipTable = "CREATE TABLE IF NOT EXISTS Relationship" +"(user_one_ID INT, user_two_ID INT," +
                                "status INT, action_user_ID INT);";
     
 
@@ -30,7 +30,6 @@ public class CreateTable {
     }
 
     public void createTable(String query){
-
 
         if(DBconnection.openConnectionToDB(database)){
             try {

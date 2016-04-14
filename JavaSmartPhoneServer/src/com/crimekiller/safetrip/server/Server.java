@@ -3,6 +3,11 @@ package com.crimekiller.safetrip.server;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.crimekiller.safetrip.Database.CreateDatabase;
+import com.crimekiller.safetrip.Database.CreateTable;
+import com.crimekiller.safetrip.Database.UserCRUD;
+import com.crimekiller.safetrip.model.User;
+
 /**
  * @author  Wenlu Zhang 
  * @AndrewID: wenluz
@@ -45,6 +50,21 @@ public class Server implements SocketServerConstants{
 	  
 	//Main Driver starts server  
 	  public static void main( String[] arg ){
+		String dataBaseName = "SafeTrip";
+		
+		CreateDatabase createDB = new CreateDatabase();
+		createDB.createDatabase(dataBaseName);
+		CreateTable createTable = new CreateTable(dataBaseName);
+		
+		User a = new User("UserA","123","123");
+	    User b = new User("UserB","124","124");
+	    User c = new User("UserC","125","125");
+		
+	    UserCRUD userCrud = new UserCRUD(dataBaseName);
+		userCrud.addUserToDB(a);
+		userCrud.addUserToDB(b);
+		userCrud.addUserToDB(c);
+			
 		Server server = new Server();
 		server.runServer();
 	}
