@@ -1,4 +1,4 @@
-package com.crimekiller.safetrip.Model;
+package com.crimekiller.safetrip.model;
 
 import java.io.Serializable;
 
