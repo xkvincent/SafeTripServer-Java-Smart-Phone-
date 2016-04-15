@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
 
+import com.crimekiller.safetrip.Database.PostCRUD;
 import com.crimekiller.safetrip.Database.UserCRUD;
+import com.crimekiller.safetrip.model.Post;
 import com.crimekiller.safetrip.model.User;
 
 /**
@@ -93,6 +95,27 @@ public class DefaultSocketServer extends Thread
 						e.printStackTrace();
 					}
 				break;
+			}else if (command.equals("New Post")){
+				
+				PostCRUD postCrud = new PostCRUD(dataBaseName);
+				
+				try {
+					
+					Post newPost = (Post)objInputStream.readObject();
+					postCrud.addPostToDB(newPost);
+					ArrayList<Post> postList = postCrud.getAllPost();
+					objOutputStream.writeObject( postList );
+					objOutputStream.flush();
+					System.out.println("Add new post Successfully");
+										
+				} catch (ClassNotFoundException e) {
+					
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+				
 			}else{
 				System.out.println("No Request Received");
 			}
