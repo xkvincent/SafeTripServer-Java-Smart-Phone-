@@ -116,6 +116,26 @@ public class DefaultSocketServer extends Thread
 				}
 				break;
 				
+			}else if(command.equals("Get All Post")) {
+                PostCRUD postCrud = new PostCRUD(dataBaseName);
+				
+				try {
+					String username = (String)objInputStream.readObject();
+					
+					
+					ArrayList<Post> postList = postCrud.getAllPost();
+					objOutputStream.writeObject( postList );
+					objOutputStream.flush();
+					System.out.println("Get All Posts Successfully");
+										
+				}  catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;				
+				
 			}else{
 				System.out.println("No Request Received");
 			}
