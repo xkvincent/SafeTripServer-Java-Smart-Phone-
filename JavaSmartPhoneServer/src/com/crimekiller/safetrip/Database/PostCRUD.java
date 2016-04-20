@@ -77,6 +77,7 @@ public class PostCRUD {
         }
     }
 
+    //get all posts from all users in the database
     public ArrayList<Post> getAllPost() {
 
         ArrayList<Post> allPosts = new ArrayList<Post>();
@@ -111,6 +112,46 @@ public class PostCRUD {
         }
 
         return allPosts;
+    }
+    
+    //get all posts from a specific user
+    public ArrayList<Post> getUserPost(String username) {
+
+        ArrayList<Post> allUserPosts = new ArrayList<Post>();
+
+        if(DBconnection.openConnectionToDB(db)){
+            try{
+                connection = (Connection) DBconnection.getConnection();
+
+                query = "SELECT * FROM Post WHERE owner = ?";
+                statement = (PreparedStatement) connection.prepareStatement(query);
+                statement.setString(1, username);
+                
+                ResultSet rs = statement.executeQuery();
+                while(rs.next()){
+
+           		    String date = rs.getString("date");
+                    String plate = rs.getString("licenseplate");
+                    String destination = rs.getString("destination");
+                    String model = rs.getString("model");
+                    String color = rs.getString("color");
+                    String departure = rs.getString("departure");
+                    String owner = rs.getString("owner");
+               
+                    Post aPost = new Post(date, plate, destination, model,color, departure, owner);
+                    allUserPosts.add(aPost);               	
+
+                }
+                
+                System.out.println("All posts from the user: " + username + " are obtained successfully.");
+                statement.close();
+            } catch (SQLException e){
+                System.out.println ("SQL Exception when getting all posts from database.");
+                e.printStackTrace();
+            }
+        }
+
+        return allUserPosts;
     }
 
 }
