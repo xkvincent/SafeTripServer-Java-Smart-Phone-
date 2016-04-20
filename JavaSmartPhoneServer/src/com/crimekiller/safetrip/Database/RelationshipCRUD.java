@@ -146,7 +146,7 @@ public class RelationshipCRUD {
                 statement.close();
 
             } catch (SQLException e){
-                System.out.println ("SQL Exception when adding friend relationship to database.");
+                System.out.println ("SQL Exception when getting friend list from database.");
                 e.printStackTrace();
             }
         }
@@ -217,7 +217,7 @@ public class RelationshipCRUD {
                 
 
             } catch (SQLException e){
-                System.out.println ("SQL Exception when finding the userID.");
+                System.out.println ("SQL Exception when finding the username.");
                 e.printStackTrace();
             }
         }

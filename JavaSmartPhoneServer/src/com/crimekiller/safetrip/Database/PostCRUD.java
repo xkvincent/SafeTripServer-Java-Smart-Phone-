@@ -146,7 +146,7 @@ public class PostCRUD {
                 System.out.println("All posts from the user: " + username + " are obtained successfully.");
                 statement.close();
             } catch (SQLException e){
-                System.out.println ("SQL Exception when getting all posts from database.");
+                System.out.println ("SQL Exception when getting all posts of a user from database.");
                 e.printStackTrace();
             }
         }

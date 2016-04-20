@@ -93,4 +93,33 @@ public class UserCRUD {
         return allUsers;
     }
     
+    
+    //get all username in the database
+    public ArrayList<String> getAllUsername() {
+
+        ArrayList<String> allUsername = new ArrayList<String>();
+
+        if(DBconnection.openConnectionToDB(db)){
+            try{
+                connection = (Connection) DBconnection.getConnection();
+
+                query = "SELECT username FROM User";
+                statement = (PreparedStatement) connection.prepareStatement(query);
+                ResultSet rs = statement.executeQuery();
+                while(rs.next()){
+
+                    String username = rs.getString("username");
+                    allUsername.add(username);
+                }
+                System.out.println("All username in the database are obtained successfully.");
+                statement.close();
+            } catch (SQLException e){
+                System.out.println ("SQL Exception when getting all username from database.");
+                e.printStackTrace();
+            }
+        }
+
+        return allUsername;
+    }
+    
 }
