@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import com.crimekiller.safetrip.model.User;
+
 
 public class RelationshipCRUD {
 	private String db;
@@ -18,7 +18,7 @@ public class RelationshipCRUD {
         this.db = database;
     }
 
-    //when one user send friend requrest, then a new pending relationship will be created in the relationship table
+    //when one user send friend request, then a new pending relationship will be created in the relationship table
     public void addPendingRelationshipToDB(String username1, String username2, String actionUsername){
     	int user_one_id=0, user_two_id=0,action_user_id=0;
     	
@@ -80,8 +80,11 @@ public class RelationshipCRUD {
                 }
                 
                 //insert the record into database
-                //
+
                 query = "UPDATE Relationship SET status =1, action_user_id =? Where user_one_id =? AND user_two_id =? AND status =0";
+
+            //    query = "UPDATE Relationship SET status = 1 AND action_user_ID = ? Where user_one_ID =? AND user_two_ID = ? AND status = 0";
+
                 statement = (PreparedStatement) connection.prepareStatement(query);
                 
                 if(user_one_id<user_two_id) {
@@ -94,7 +97,7 @@ public class RelationshipCRUD {
                     statement.setInt(2, user_two_id);
                     statement.setInt(3,user_one_id);
                 }
-                
+
                 statement.executeUpdate();
                 System.out.println("New friend relationship is successfully added to database.");
                 statement.close();
@@ -106,7 +109,58 @@ public class RelationshipCRUD {
         }
     }
     
-    //when a user deletes a relationship with another user, the relationship record will be deleted from the relationship table
+    //get the all the friends of a user    
+    public ArrayList<String> getFriendList(String username){
+    	
+        ArrayList<String> friendList = new ArrayList<String>();
+    	int user_id=0, friendID = 0;
+    	String friendName;
+    	
+        if(DBconnection.openConnectionToDB(db)){
+               
+             try{           	 
+            	 user_id = findUserID(username);
+                
+                //get the userID of friends from database
+                query = "SELECT user_one_ID FROM Relationship " + "WHERE user_two_ID = ? AND status = 1";
+                statement = (PreparedStatement) connection.prepareStatement(query);
+                statement.setInt(1, user_id);
+                
+                ResultSet rs = statement.executeQuery();
+                
+                if (rs.next()) {
+                    friendID = Integer.parseInt(rs.getString("user_one_ID"));
+                    friendName = findUsername(friendID);
+                    friendList.add(friendName);
+                }
+                
+                query = "SELECT user_two_ID FROM Relationship " + "WHERE user_one_ID = ? AND status = 1";
+                statement = (PreparedStatement) connection.prepareStatement(query);
+                statement.setInt(1, user_id);
+                
+                rs = statement.executeQuery();
+                
+                if (rs.next()) {
+                    friendID = Integer.parseInt(rs.getString("user_two_ID"));
+                    friendName = findUsername(friendID);
+                    friendList.add(friendName);
+                }
+                
+                System.out.println("Friend list are obtained successfully.");
+                statement.close();
+
+            } catch (SQLException e){
+                System.out.println ("SQL Exception when getting friend list from database.");
+                e.printStackTrace();
+            }
+        }
+        
+        return friendList;
+    }
+    
+    
+    //when a user deletes a relationship with another user OR 
+    //when a user declines a friend request, the relationship record will be deleted from the relationship table
     public void deleteRelationshipFromDB(String username1,String username2){
     	
         int user_one_id=0, user_two_id=0;
@@ -119,7 +173,7 @@ public class RelationshipCRUD {
             	 
                 
                 //delete the relationship from table
-            	query = "DELETE FROM Relationship WHERE user_one_id = ? AND user_two_id=? AND status =1";
+            	query = "DELETE FROM Relationship WHERE user_one_ID = ? AND user_two_ID=?";
                 statement = (PreparedStatement) connection.prepareStatement(query);
                 
                 if(user_one_id<user_two_id) {
@@ -164,7 +218,7 @@ public class RelationshipCRUD {
                 
 
             } catch (SQLException e){
-                System.out.println ("SQL Exception when finding the userID.");
+                System.out.println ("SQL Exception when finding the username.");
                 e.printStackTrace();
             }
         }
@@ -172,6 +226,36 @@ public class RelationshipCRUD {
         return userID;
     }
 
+    // this method is used to find the username through the userID
+    private String findUsername(int userID) {
+           String username = "";
+    	
+        if(DBconnection.openConnectionToDB(db)){
+            try{
+                connection = (Connection) DBconnection.getConnection();
+                
+                //get the userID for user one
+                query = "SELECT username FROM User " + "WHERE userID = ?";
+
+                statement = (PreparedStatement) connection.prepareStatement(query);
+                statement.setInt(1,userID);
+                
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()) {
+                    username = rs.getString("username");
+                }
+               
+                statement.close();               
+
+            } catch (SQLException e){
+                System.out.println ("SQL Exception when finding the userID.");
+                e.printStackTrace();
+            }
+        }
+        
+        return username;
+    }
+    
     //get Friend ID through the username 
 	public ArrayList<Integer> getFriendIDList(String username) {
 		int finderID = findUserID(username);
@@ -212,14 +296,14 @@ public class RelationshipCRUD {
 	}
     
 	//get Friend List through the username using getFriendIDList
-	public ArrayList<User> getFriendList(String username) {
+	//Wenlu
+	public ArrayList<User> getFriendNameList(String username) {
 		ArrayList<Integer> friendIDList = getFriendIDList( username );
 		ArrayList<User> friendList = new ArrayList<User>();	
 		if(DBconnection.openConnectionToDB(db)){
             try{
                 connection = (Connection) DBconnection.getConnection();
                 
-                //get the userID for user one
                 for( int userID: friendIDList) {
 	                query = "SELECT username, email, password FROM User " + "WHERE userID = ?";
 	

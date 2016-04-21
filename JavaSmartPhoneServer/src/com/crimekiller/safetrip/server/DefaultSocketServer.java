@@ -91,7 +91,7 @@ public class DefaultSocketServer extends Thread
 						String username = (String)objInputStream.readObject();
 						System.out.println("Get userName " + username);
 						ArrayList<User> friendList = 
-									relationshipCrud.getFriendList(username);
+									relationshipCrud.getFriendNameList(username);
 						ArrayList<String> pendingList = 
 									relationshipCrud.getPendingRequestList(username);
 						ArrayList<String> requestList =
