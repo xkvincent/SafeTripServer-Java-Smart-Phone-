@@ -18,6 +18,38 @@ public class UserCRUD {
         this.db = database;
     }
 
+    public User getUserInDB(String username){
+    	User user = null;
+        if(DBconnection.openConnectionToDB(db)){
+        	
+            try{
+                connection = (Connection) DBconnection.getConnection();
+
+                //query = "SELECT * FROM User WHERE username = 'UserA'";
+                query = "SELECT * FROM User WHERE username = '" + username+"';";
+//                query = "SELECT * FROM User WHERE username = ?" ;//???
+//                statement.setString(1, username);
+                
+                statement = (PreparedStatement) connection.prepareStatement(query);
+                
+                ResultSet rs = statement.executeQuery();
+                while(rs.next()){       
+                user = new User(rs.getString("username"), rs.getString("password"),
+                		rs.getString("email"));
+               }
+                System.out.println("The user is successfully getted.");
+                statement.close();
+
+            } catch (SQLException e){
+                System.out.println ("SQL Exception when finding user in database.");
+                e.printStackTrace();
+            }
+        }
+		return user;
+    }
+    
+  
+    
     public void addUserToDB(User a){
         if(DBconnection.openConnectionToDB(db)){
             try{

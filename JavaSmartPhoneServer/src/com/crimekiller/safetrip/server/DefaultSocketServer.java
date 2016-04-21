@@ -43,6 +43,9 @@ public class DefaultSocketServer extends Thread
     private static String ADD_NEW_POST_COMMAND = "New Post";
     private static String DELETE_POST_COMMAND= "Delete Post";
     private static String ALL_POST_COMMAND= "Get All Post";
+    private static String LOG_IN_COMMAND = "Login";
+    private static String SIGN_UP_COMMAND = "SignUp";
+    private static String EDIT_PASSWORD_COMMAND = "EditPassword";
 	
 	public DefaultSocketServer( Socket socket ){
 		this.socket = socket;
@@ -272,6 +275,74 @@ public class DefaultSocketServer extends Thread
 					break;
 				
 				
+			}else if(command.equals(EDIT_PASSWORD_COMMAND)){	
+				
+				UserCRUD userCrud = new UserCRUD(dataBaseName);
+				
+				try {
+					User user = (User)objInputStream.readObject();
+					String newPassword = user.getPassword();
+					userCrud.EditUserInDB(user,newPassword);
+
+					System.out.println("Edit Password Successfully");
+										
+				}  catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;				
+			}else if(command.equals(SIGN_UP_COMMAND)){
+				UserCRUD userCrud = new UserCRUD(dataBaseName);
+				Boolean result;
+				try {
+					String username = (String)objInputStream.readObject();
+					System.out.println("get user name from client:"+username);
+					User user = userCrud.getUserInDB(username);
+					if(user == null){
+						result = true;
+						objOutputStream.writeObject( result );
+						objOutputStream.flush();
+						
+						User newUser = (User)objInputStream.readObject();
+						userCrud.addUserToDB(newUser);
+						System.out.println("SignUp Successfully");
+					}
+					else{
+						result = false;
+						objOutputStream.writeObject( result );
+						objOutputStream.flush();
+					}
+										
+										
+				}  catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;			
+				
+				
+			}else if(command.equals(LOG_IN_COMMAND)){
+				UserCRUD userCrud = new UserCRUD(dataBaseName);
+				
+				try {
+					String username = (String)objInputStream.readObject();
+					User user = userCrud.getUserInDB(username);
+					
+					objOutputStream.writeObject( user );
+					objOutputStream.flush();
+					System.out.println("Login Successfully");
+										
+				}  catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;				
 			}else{
 				System.out.println("No Request Received");
 			}
