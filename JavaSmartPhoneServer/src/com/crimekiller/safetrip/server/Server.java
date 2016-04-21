@@ -63,12 +63,17 @@ public class Server implements SocketServerConstants{
 	    User d = new User("d","126","126");
 	    User e = new User("e","127","127");
 		
+	    
+	    User admin = new User("admin", "administrator", "admin@cmu.edu");//this is the admin
+	    
 	    UserCRUD userCrud = new UserCRUD(dataBaseName);
 		userCrud.addUserToDB(a);
 		userCrud.addUserToDB(b);
 		userCrud.addUserToDB(c);
 		userCrud.addUserToDB(d);
 		userCrud.addUserToDB(e);
+		
+		userCrud.addUserToDB(admin);//add the admin into DB
 		
 		RelationshipCRUD relationCRUD = new RelationshipCRUD(dataBaseName);
 		//relationCRUD.addPendingRelationshipToDB(username1, username2, actionUsername);
