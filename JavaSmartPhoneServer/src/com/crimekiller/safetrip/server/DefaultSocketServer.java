@@ -40,6 +40,9 @@ public class DefaultSocketServer extends Thread
 	private static String GET_PENDING_REQUEST_COMMAND = "Get Pending Request";
 	private static String ACCEPT_PENDING_REQUEST_COMMAND = "Accept Pending Request";
     private static String DECLINE_PENDING_REQUEST_COMMAND = "Decline Pending Request";
+    private static String ADD_NEW_POST_COMMAND = "New Post";
+    private static String DELETE_POST_COMMAND= "Delete Post";
+    private static String ALL_POST_COMMAND= "Get All Post";
 	
 	public DefaultSocketServer( Socket socket ){
 		this.socket = socket;
@@ -203,7 +206,7 @@ public class DefaultSocketServer extends Thread
 					e.printStackTrace();
 				}
 				break;
-			}else if (command.equals("New Post")){
+			}else if (command.equals(ADD_NEW_POST_COMMAND)){
 				
 				PostCRUD postCrud = new PostCRUD(dataBaseName);
 		
@@ -223,27 +226,30 @@ public class DefaultSocketServer extends Thread
 				}
 				break;
 				
-			}else if(command.equals("Get All Post")) {
+			}else if(command.equals(ALL_POST_COMMAND)) {
                 PostCRUD postCrud = new PostCRUD(dataBaseName);
+                RelationshipCRUD relationshipCrud = new RelationshipCRUD(dataBaseName);
+                
+                try {
+				   String username = (String)objInputStream.readObject();				
+				   ArrayList<Post> postList = new ArrayList<Post>();
+				   
+				   ArrayList<String> friendList = relationshipCrud.getFriendList(username);
+				   postList = postCrud.getFriendPost(friendList);
+					   			
+				   objOutputStream.writeObject( postList );
+				   objOutputStream.flush();
+				   System.out.println("Get All Posts Successfully");
+									
+			   }  catch (ClassNotFoundException e) {
+				   // TODO Auto-generated catch block
+				   e.printStackTrace();
+			   }  catch (IOException e) {
+				   e.printStackTrace();
+			   }
+				   break;				
 				
-				try {
-					String username = (String)objInputStream.readObject();
-					
-					
-					ArrayList<Post> postList = postCrud.getAllPost();
-					objOutputStream.writeObject( postList );
-					objOutputStream.flush();
-					System.out.println("Get All Posts Successfully");
-										
-				}  catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}  catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;				
-				
-			}else if (command.equals("Delete Post")) {
+			}else if (command.equals(DELETE_POST_COMMAND)) {
 				
 				 PostCRUD postCrud = new PostCRUD(dataBaseName);
 					

@@ -36,7 +36,7 @@ public class RelationshipCRUD {
                 }
                 
                 //insert the record into database
-                query = "INSERT INTO Relationship (user_one_Id,user_two_Id,status, action_user_Id) VALUES (?,?,?,?)";
+                query = "INSERT INTO Relationship (user_one_id,user_two_id,status, action_user_id) VALUES (?,?,?,?)";
                 statement = (PreparedStatement) connection.prepareStatement(query);
                 
                 if(user_one_id<user_two_id) {
@@ -122,26 +122,26 @@ public class RelationshipCRUD {
             	 user_id = findUserID(username);
                 
                 //get the userID of friends from database
-                query = "SELECT user_one_ID FROM Relationship " + "WHERE user_two_ID = ? AND status = 1";
+                query = "SELECT user_one_id FROM Relationship " + "WHERE user_two_id = ? AND status = 1";
                 statement = (PreparedStatement) connection.prepareStatement(query);
                 statement.setInt(1, user_id);
                 
                 ResultSet rs = statement.executeQuery();
                 
                 if (rs.next()) {
-                    friendID = Integer.parseInt(rs.getString("user_one_ID"));
+                    friendID = Integer.parseInt(rs.getString("user_one_id"));
                     friendName = findUsername(friendID);
                     friendList.add(friendName);
                 }
                 
-                query = "SELECT user_two_ID FROM Relationship " + "WHERE user_one_ID = ? AND status = 1";
+                query = "SELECT user_two_id FROM Relationship " + "WHERE user_one_id = ? AND status = 1";
                 statement = (PreparedStatement) connection.prepareStatement(query);
                 statement.setInt(1, user_id);
                 
                 rs = statement.executeQuery();
                 
                 if (rs.next()) {
-                    friendID = Integer.parseInt(rs.getString("user_two_ID"));
+                    friendID = Integer.parseInt(rs.getString("user_two_id"));
                     friendName = findUsername(friendID);
                     friendList.add(friendName);
                 }
@@ -173,7 +173,7 @@ public class RelationshipCRUD {
             	 
                 
                 //delete the relationship from table
-            	query = "DELETE FROM Relationship WHERE user_one_ID = ? AND user_two_ID=?";
+            	query = "DELETE FROM Relationship WHERE user_one_id = ? AND user_two_id=?";
                 statement = (PreparedStatement) connection.prepareStatement(query);
                 
                 if(user_one_id<user_two_id) {

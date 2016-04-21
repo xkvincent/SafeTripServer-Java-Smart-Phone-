@@ -115,7 +115,7 @@ public class PostCRUD {
     }
     
     //get all posts from a specific user
-    public ArrayList<Post> getUserPost(String username) {
+    public ArrayList<Post> getFriendPost(ArrayList<String> friendName) {
 
         ArrayList<Post> allUserPosts = new ArrayList<Post>();
 
@@ -123,27 +123,30 @@ public class PostCRUD {
             try{
                 connection = (Connection) DBconnection.getConnection();
 
-                query = "SELECT * FROM Post WHERE owner = ?";
+                query = "SELECT * FROM Post";
                 statement = (PreparedStatement) connection.prepareStatement(query);
-                statement.setString(1, username);
                 
                 ResultSet rs = statement.executeQuery();
                 while(rs.next()){
+                	
+                	String owner = rs.getString("owner");
+                	
+                	if (friendName.contains(owner))  {
 
-           		    String date = rs.getString("date");
-                    String plate = rs.getString("licenseplate");
-                    String destination = rs.getString("destination");
-                    String model = rs.getString("model");
-                    String color = rs.getString("color");
-                    String departure = rs.getString("departure");
-                    String owner = rs.getString("owner");
+                		String date = rs.getString("date");
+                        String plate = rs.getString("licenseplate");
+                        String destination = rs.getString("destination");
+                        String model = rs.getString("model");
+                        String color = rs.getString("color");
+                        String departure = rs.getString("departure");
                
-                    Post aPost = new Post(date, plate, destination, model,color, departure, owner);
-                    allUserPosts.add(aPost);               	
+                        Post aPost = new Post(date, plate, destination, model,color, departure, owner);
+                        allUserPosts.add(aPost); 
+                	}
 
                 }
                 
-                System.out.println("All posts from the user: " + username + " are obtained successfully.");
+                System.out.println("All posts are obtained successfully.");
                 statement.close();
             } catch (SQLException e){
                 System.out.println ("SQL Exception when getting all posts of a user from database.");
@@ -153,5 +156,7 @@ public class PostCRUD {
 
         return allUserPosts;
     }
+    
+    
 
 }
