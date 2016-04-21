@@ -18,8 +18,9 @@ public class CreateTable {
             "username varchar(255) NOT NULL,"+  "email varchar(255) NOT NULL,"+
             "password varchar(355) NOT NULL, PRIMARY KEY (userID)); ";  //add email
     
-    String RelationshipTable = "CREATE TABLE IF NOT EXISTS Relationship" +"(user_one_ID INT, user_two_ID INT," +
-                               "status INT, action_user_ID INT);";
+    String RelationshipTable = "CREATE TABLE IF NOT EXISTS Relationship" +
+    			"( relationshipID INT NOT NULL AUTO_INCREMENT," + "user_one_id INT, user_two_id INT," +
+                "status INT, action_user_id INT, PRIMARY KEY (relationshipID));";
     
 
     public CreateTable(String database){
