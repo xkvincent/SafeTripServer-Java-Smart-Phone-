@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
 
+import com.crimekiller.safetrip.Database.LocationCRUD;
 import com.crimekiller.safetrip.Database.PostCRUD;
 import com.crimekiller.safetrip.Database.RelationshipCRUD;
 import com.crimekiller.safetrip.Database.UserCRUD;
@@ -33,20 +34,6 @@ public class DefaultSocketServer extends Thread
 	private Socket socket;
 	private ObjectInputStream objInputStream = null;
 	private ObjectOutputStream objOutputStream = null;
-	private static String dataBaseName = "SafeTrip";
-	private static String GET_FRIEND_LIST_COMMAND = "Get Friend List";
-	private static String GET_USER_LIST_COMMAND = "Get User List";
-	private static String SEND_FRIEND_REQUEST_COMMAND = "Send Friend Request" ;
-	private static String GET_PENDING_REQUEST_COMMAND = "Get Pending Request";
-	private static String ACCEPT_PENDING_REQUEST_COMMAND = "Accept Pending Request";
-    private static String DECLINE_PENDING_REQUEST_COMMAND = "Decline Pending Request";
-    private static String ADD_NEW_POST_COMMAND = "New Post";
-    private static String DELETE_POST_COMMAND= "Delete Post";
-    private static String ALL_POST_COMMAND= "Get All Post";
-    private static String LOG_IN_COMMAND = "Login";
-    private static String SIGN_UP_COMMAND = "SignUp";
-    private static String EDIT_PASSWORD_COMMAND = "EditPassword";
-    private static String ADMIN_GET_ALLPOST_COMMAND = "Admin Get All Post List";
 	
 	public DefaultSocketServer( Socket socket ){
 		this.socket = socket;
@@ -92,7 +79,6 @@ public class DefaultSocketServer extends Thread
 				RelationshipCRUD relationshipCrud = new RelationshipCRUD(dataBaseName);		
 				
 				ArrayList<User> userList = userCrud.getAllUser();	
-			
 				
 				try {
 						String username = (String)objInputStream.readObject();
@@ -224,7 +210,57 @@ public class DefaultSocketServer extends Thread
 					e.printStackTrace();
 				}
 				break;
-			}else if (command.equals(ADD_NEW_POST_COMMAND)){
+			}else if (command.equals(TRACK_FRIEND_LIST_COMMAND)){
+				RelationshipCRUD relationshipCrud = new RelationshipCRUD(dataBaseName);	
+				LocationCRUD locationCrud = new LocationCRUD(dataBaseName);
+				ArrayList<String> locationList = new ArrayList<String>();
+				System.out.println("Before Track Friend List");
+				
+				try {
+					String userName = (String)objInputStream.readObject();
+					String requestName = (String) objInputStream.readObject();
+					ArrayList<String> friendNameList = 
+								relationshipCrud.getFriendList(userName);
+					for( String name : friendNameList ){
+						System.out.println( name );
+					}
+					if( friendNameList.contains(requestName)){
+						locationList = locationCrud.getUserLocation(requestName);
+						System.out.println( "TRACK FRIEND LIST COMMAND succeed ");
+					}
+					objOutputStream.writeObject( locationList );
+					objOutputStream.flush();
+					
+				}catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			}else if(command.equals(SHARE_LOCATION)){
+				
+				LocationCRUD locationCrud = new LocationCRUD(dataBaseName);
+				
+				try {
+					String username = (String) objInputStream.readObject();
+					ArrayList<String>locationList = (ArrayList<String>) 
+													objInputStream.readObject();
+					String longitude = locationList.get(0);
+					String latitude = locationList.get(1);
+					locationCrud.addUserLocationToDB(username, latitude, longitude);
+					    
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			}
+			else if (command.equals(ADD_NEW_POST_COMMAND)){
 				
 				PostCRUD postCrud = new PostCRUD(dataBaseName);
 		

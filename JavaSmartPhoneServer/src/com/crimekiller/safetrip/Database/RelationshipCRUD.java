@@ -158,7 +158,6 @@ public class RelationshipCRUD {
         return friendList;
     }
     
-    
     //when a user deletes a relationship with another user OR 
     //when a user declines a friend request, the relationship record will be deleted from the relationship table
     public void deleteRelationshipFromDB(String username1,String username2){
@@ -402,7 +401,6 @@ public class RelationshipCRUD {
 		return pendingRequestList;
 	}
 
-	
 	//get Already Sent Request from username List ID through username 
 	public ArrayList<Integer> getAlreadyRequestIDList(String username){
 			int finderID = findUserID(username);

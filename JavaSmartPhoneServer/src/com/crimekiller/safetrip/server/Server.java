@@ -5,6 +5,7 @@ import java.net.Socket;
 
 import com.crimekiller.safetrip.Database.CreateDatabase;
 import com.crimekiller.safetrip.Database.CreateTable;
+import com.crimekiller.safetrip.Database.LocationCRUD;
 import com.crimekiller.safetrip.Database.PostCRUD;
 import com.crimekiller.safetrip.Database.RelationshipCRUD;
 import com.crimekiller.safetrip.Database.UserCRUD;
@@ -95,6 +96,10 @@ public class Server implements SocketServerConstants{
 		PostCRUD postCRUD = new PostCRUD(dataBaseName);
 		postCRUD.addPostToDB(postA);
 		postCRUD.addPostToDB(postB);
+		
+		LocationCRUD locationCRUD = new LocationCRUD(dataBaseName);
+//		locationCRUD.addUserLocationToDB("b", "37.390986", "-122.071734");
+//		locationCRUD.addUserLocationToDB("b", "37.390986", "122.071734");
 		
 		Server server = new Server();
 		server.runServer();
