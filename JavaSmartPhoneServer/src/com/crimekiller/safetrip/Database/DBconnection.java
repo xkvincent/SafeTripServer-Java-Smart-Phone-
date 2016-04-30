@@ -11,7 +11,7 @@ public class DBconnection {
     private static String URL= "jdbc:mysql://127.0.0.1:3306/";
 	//private static String URL = "jdbc:mysql://localhost/";//Modify
     private static String USERNAME = "root";
-    private static String PASSWORD= "root";//Modify
+    private static String PASSWORD= "";//Modify
     private static Connection connection;
 
     public static Connection getConnection() {

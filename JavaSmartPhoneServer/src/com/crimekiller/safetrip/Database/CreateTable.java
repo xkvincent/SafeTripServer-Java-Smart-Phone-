@@ -22,12 +22,17 @@ public class CreateTable {
     			"( relationshipID INT NOT NULL AUTO_INCREMENT," + "user_one_id INT, user_two_id INT," +
                 "status INT, action_user_id INT, PRIMARY KEY (relationshipID));";
     
+    String LocationTable = "CREATE TABLE IF NOT EXISTS Location" + "(locationID INT NOT NULL AUTO_INCREMENT," +
+            "username varchar(255) NOT NULL,"+  "latitude varchar(255) NOT NULL,"+
+            "longitude varchar(355) NOT NULL, PRIMARY KEY (locationID)); ";
+    
 
     public CreateTable(String database){
         this.database = database;
         createTable(PostTable);
         createTable(UserTable);
         createTable(RelationshipTable);
+        createTable(LocationTable);
     }
 
     public void createTable(String query){
