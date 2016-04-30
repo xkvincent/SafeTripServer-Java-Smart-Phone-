@@ -5,8 +5,10 @@ import java.net.Socket;
 
 import com.crimekiller.safetrip.Database.CreateDatabase;
 import com.crimekiller.safetrip.Database.CreateTable;
+import com.crimekiller.safetrip.Database.PostCRUD;
 import com.crimekiller.safetrip.Database.RelationshipCRUD;
 import com.crimekiller.safetrip.Database.UserCRUD;
+import com.crimekiller.safetrip.model.Post;
 import com.crimekiller.safetrip.model.User;
 
 /**
@@ -84,6 +86,15 @@ public class Server implements SocketServerConstants{
 		relationCRUD.addFreiendRelationshipToDB("a", "b","b");
 		relationCRUD.addPendingRelationshipToDB("c","a","c");
 		relationCRUD.addPendingRelationshipToDB("a","d","a");
+		
+		Post postA = new Post("May 1st 2016","Y5-99800","Castro Ave"," Corolla",
+							 "White","MTV Library","admin");
+		Post postB = new Post("May 1st 2016","M9-44679","CMU"," Cruise",
+							  "Black","MTV Library","admin");
+		
+		PostCRUD postCRUD = new PostCRUD(dataBaseName);
+		postCRUD.addPostToDB(postA);
+		postCRUD.addPostToDB(postB);
 		
 		Server server = new Server();
 		server.runServer();

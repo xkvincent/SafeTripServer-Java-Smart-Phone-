@@ -46,7 +46,7 @@ public class DefaultSocketServer extends Thread
     private static String LOG_IN_COMMAND = "Login";
     private static String SIGN_UP_COMMAND = "SignUp";
     private static String EDIT_PASSWORD_COMMAND = "EditPassword";
-//    private static String ADMIN_COMMAND = "Admin";
+    private static String ADMIN_GET_ALLPOST_COMMAND = "Admin Get All Post List";
 	
 	public DefaultSocketServer( Socket socket ){
 		this.socket = socket;
@@ -158,7 +158,7 @@ public class DefaultSocketServer extends Thread
 				
 				RelationshipCRUD relationshipCrud = new RelationshipCRUD(dataBaseName);	
 				try {
-					String userName = (String)objInputStream.readObject();
+					String userName = (String)objInputStream.readObject();			
 					ArrayList<String>pendingRequest=
 					relationshipCrud.getPendingRequestList(userName);
 					objOutputStream.writeObject(pendingRequest);
@@ -207,6 +207,20 @@ public class DefaultSocketServer extends Thread
 					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			}else if(command.equals(ADMIN_GET_ALLPOST_COMMAND)){
+				
+				PostCRUD postCrud = new PostCRUD(dataBaseName);	
+				ArrayList<Post> allPostList = postCrud.getAllPost();
+
+				try {
+					objOutputStream.writeObject( allPostList );
+					objOutputStream.flush();
+					System.out.println( "GET USER LIST COMMAND succeed ");
+					
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				break;
@@ -315,20 +329,17 @@ public class DefaultSocketServer extends Thread
 						objOutputStream.writeObject( result );
 						objOutputStream.flush();
 					}
-										
-										
+																			
 				}  catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}  catch (IOException e) {
 					e.printStackTrace();
 				}
-				break;			
-				
+				break;						
 				
 			}else if(command.equals(LOG_IN_COMMAND)){
-				UserCRUD userCrud = new UserCRUD(dataBaseName);
-				
+					UserCRUD userCrud = new UserCRUD(dataBaseName);		
 				try {
 					String username = (String)objInputStream.readObject();
 					User user = userCrud.getUserInDB(username);
@@ -344,27 +355,6 @@ public class DefaultSocketServer extends Thread
 					e.printStackTrace();
 				}
 				break;				
-//			}else if(command.equals(ADMIN_COMMAND)){
-//				
-//				try {
-////					String username = (String)objInputStream.readObject();
-////					User user = userCrud.getUserInDB(username);
-//					User admin = (User)objInputStream.readObject();//admin
-//					
-//					Boolean result;
-//					
-//					objOutputStream.writeObject( result );
-//					objOutputStream.flush();
-//					System.out.println("Admin Login Successfully");
-//										
-//				}  catch (ClassNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}  catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//				break;				
-							
 			}else{
 				System.out.println("No Request Received");
 			}
