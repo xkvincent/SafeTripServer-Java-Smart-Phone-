@@ -98,8 +98,8 @@ public class Server implements SocketServerConstants{
 		postCRUD.addPostToDB(postB);
 		
 		LocationCRUD locationCRUD = new LocationCRUD(dataBaseName);
-//		locationCRUD.addUserLocationToDB("b", "37.390986", "-122.071734");
-//		locationCRUD.addUserLocationToDB("b", "37.390986", "122.071734");
+		locationCRUD.addUserLocationToDB("a", "37.390986", "122.071734");
+		locationCRUD.addUserLocationToDB("b", "37.390986", "122.071734");
 		
 		Server server = new Server();
 		server.runServer();

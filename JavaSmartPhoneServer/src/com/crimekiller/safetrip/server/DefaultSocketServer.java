@@ -250,7 +250,7 @@ public class DefaultSocketServer extends Thread
 					String longitude = locationList.get(0);
 					String latitude = locationList.get(1);
 					locationCrud.addUserLocationToDB(username, latitude, longitude);
-					    
+					System.out.println( "SHARE LOCATION COMMAND succeed ");   
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
