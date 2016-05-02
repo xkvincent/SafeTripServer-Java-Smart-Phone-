@@ -35,24 +35,44 @@ public class RelationshipCRUD {
                 	action_user_id = user_two_id;
                 }
                 
-                //insert the record into database
-                query = "INSERT INTO Relationship (user_one_id,user_two_id,status, action_user_id) VALUES (?,?,?,?)";
+                query = "SELECT relationshipID FROM Relationship "
+                        + "WHERE user_one_id = ?  AND user_two_id = ?";
+
                 statement = (PreparedStatement) connection.prepareStatement(query);
                 
                 if(user_one_id<user_two_id) {
                     statement.setInt(1, user_one_id);
                     statement.setInt(2, user_two_id);
-                    statement.setInt(3,0);
-                    statement.setInt(4,action_user_id);
                 } else {
                 	statement.setInt(1, user_two_id);
                     statement.setInt(2, user_one_id);
-                    statement.setInt(3,0);
-                    statement.setInt(4,action_user_id);
                 }
                 
-                statement.executeUpdate();
-                System.out.println("New relationship is successfully added to database.");
+                ResultSet rs = statement.executeQuery();
+                
+                if (!rs.next()) {
+                	  //insert the record into database
+                    query = "INSERT INTO Relationship (user_one_id,user_two_id,status, action_user_id) VALUES (?,?,?,?)";
+                    statement = (PreparedStatement) connection.prepareStatement(query);
+                    
+                    if(user_one_id<user_two_id) {
+                        statement.setInt(1, user_one_id);
+                        statement.setInt(2, user_two_id);
+                        statement.setInt(3,0);
+                        statement.setInt(4,action_user_id);
+                    } else {
+                    	statement.setInt(1, user_two_id);
+                        statement.setInt(2, user_one_id);
+                        statement.setInt(3,0);
+                        statement.setInt(4,action_user_id);
+                    }
+                    
+                    statement.executeUpdate();
+                    System.out.println("New relationship is successfully added to database.");
+                	
+                }
+                
+              
                 statement.close();
 
             } catch (SQLException e){
